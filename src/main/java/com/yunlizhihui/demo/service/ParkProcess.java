@@ -10,9 +10,8 @@ public class ParkProcess implements CollectionProcess<CarInfo> {
     public List<CarInfo> collectDataResourceData() {
         //在这里解析数据
 
-        //数据存到中间数据库
 
-        //中间数据存到数据中台
+        //数据存到数据中台
         return null;
     }
 }
