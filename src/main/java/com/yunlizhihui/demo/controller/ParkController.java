@@ -50,17 +50,17 @@ public class ParkController {
 
         //解析json对象
         CarInfo carInfo = jsonObject.toJavaObject(CarInfo.class);
-        //提取车位实时变化信息
+        //提取车辆进出实时变化信息
 
-        //创建停车场车位topic
-        adminClient.createTopic(new Topic(park_topic, 1));
+        //创建车辆进出停车场topic
+        adminClient.createTopic(new Topic(car_topic, 1));
         //向topic发送消息
-        producer.sendEventAsync(new Event(park_topic, "test", "data".getBytes()));
+        producer.sendEventAsync(new Event(car_topic, "test", "data".getBytes()));
 
         producer.flush();
         producer.close();
 
-        //将carinfo对象存入mysql数据库
+        //将CarInfo对象存入mysql数据库
         jdbcTemplate.update("xxx");
 
         return false;
@@ -73,10 +73,24 @@ public class ParkController {
      * @return
      */
     @RequestMapping(value = "/park_slot", method = RequestMethod.POST)
-    public boolean park_slot(@RequestBody JSONObject jsonObject) {
+    public boolean park_slot(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
 
+        //解析json对象
         ParkSlotStatus parkSlotStatus = jsonObject.toJavaObject(ParkSlotStatus.class);
+        //提取车位实时变化信息
+
+        //创建停车场车位topic
+        adminClient.createTopic(new Topic(park_topic, 1));
+        //向topic发送消息
+        producer.sendEventAsync(new Event(park_topic, "test", "data".getBytes()));
+
+        producer.flush();
+        producer.close();
+
+        //将ParkSlotStatus对象存入mysql数据库
+        jdbcTemplate.update("xxx");
 
         return false;
+
     }
 }
