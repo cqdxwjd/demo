@@ -28,16 +28,16 @@ public class ParkController {
     //车辆进出停车场topic
     private final String car_topic = "car_in_out";
     //总线管理器
-    private AdminClient adminClient = new AdminClient(host, port);
+//    private AdminClient adminClient = new AdminClient(host, port);
     //总线生产者
-    private Producer producer = new Producer(host, port) {
-        @Override
-        protected void onError(Throwable throwable) {
-            throwable.printStackTrace();
-        }
-    };
+//    private Producer producer = new Producer(host, port) {
+//        @Override
+//        protected void onError(Throwable throwable) {
+//            throwable.printStackTrace();
+//        }
+//    };
 
-    private JdbcTemplate jdbcTemplate = new JdbcTemplate(JDBCUtils.getDataSource());
+//    private JdbcTemplate jdbcTemplate = new JdbcTemplate(JDBCUtils.getDataSource());
 
     /**
      * 上传车辆进出信息
@@ -53,15 +53,17 @@ public class ParkController {
         //提取车辆进出实时变化信息
 
         //创建车辆进出停车场topic
-        adminClient.createTopic(new Topic(car_topic, 1));
+//        adminClient.createTopic(new Topic(car_topic, 1));
         //向topic发送消息
-        producer.sendEventAsync(new Event(car_topic, "test", "data".getBytes()));
+//        producer.sendEventAsync(new Event(car_topic, "test", "data".getBytes()));
 
-        producer.flush();
-        producer.close();
+//        producer.flush();
+//        producer.close();
 
         //将CarInfo对象存入mysql数据库
-        jdbcTemplate.update("xxx");
+//        jdbcTemplate.update("xxx");
+
+        System.out.println(jsonObject.toString());
 
         return false;
     }
@@ -80,16 +82,17 @@ public class ParkController {
         //提取车位实时变化信息
 
         //创建停车场车位topic
-        adminClient.createTopic(new Topic(park_topic, 1));
+//        adminClient.createTopic(new Topic(park_topic, 1));
         //向topic发送消息
-        producer.sendEventAsync(new Event(park_topic, "test", "data".getBytes()));
+//        producer.sendEventAsync(new Event(park_topic, "test", "data".getBytes()));
 
-        producer.flush();
-        producer.close();
+//        producer.flush();
+//        producer.close();
 
         //将ParkSlotStatus对象存入mysql数据库
-        jdbcTemplate.update("xxx");
+//        jdbcTemplate.update("xxx");
 
+        System.out.println(jsonObject.toString());
         return false;
 
     }

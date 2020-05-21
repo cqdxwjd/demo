@@ -21,11 +21,11 @@ public class JDBCUtils {
         try {
             //1.加载配置文件
             Properties pro = new Properties();
-            pro.load(JDBCUtils.class.getClassLoader().getResourceAsStream("druid.properties"));
+//            pro.load(JDBCUtils.class.getClassLoader().getResourceAsStream("druid.properties"));
             //2.获取DataSource
-            ds = DruidDataSourceFactory.createDataSource(pro);
-        } catch (IOException e) {
-            e.printStackTrace();
+//            ds = DruidDataSourceFactory.createDataSource(pro);
+//        } catch (IOException e) {
+//            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
