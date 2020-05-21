@@ -1,20 +1,24 @@
 package com.yunlizhihui.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.yunli.bigdata.eventbus.sdk.AdminClient;
-import com.yunli.bigdata.eventbus.sdk.Event;
-import com.yunli.bigdata.eventbus.sdk.Producer;
-import com.yunli.bigdata.eventbus.sdk.Topic;
-import com.yunlizhihui.demo.domain.CarInfo;
-import com.yunlizhihui.demo.domain.ParkSlotStatus;
-import com.yunlizhihui.demo.utils.JDBCUtils;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.yunlizhihui.demo.domain.CarEntryInfo;
+import com.yunlizhihui.demo.domain.CarExitInfo;
+import com.yunlizhihui.demo.domain.ParkingLotInfo;
+import com.yunlizhihui.demo.domain.SlotInfo;
+import com.zaxxer.hikari.HikariDataSource;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 @RestController
 public class ParkController {
@@ -39,17 +43,23 @@ public class ParkController {
 
 //    private JdbcTemplate jdbcTemplate = new JdbcTemplate(JDBCUtils.getDataSource());
 
+    @Autowired
+    private DataSource dataSource;
+
+
     /**
-     * 上传车辆进出信息
+     * 上传车辆入场信息
      *
      * @param jsonObject
      * @return
      */
-    @RequestMapping(value = "/car_info", method = RequestMethod.POST)
-    public boolean car_info(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
+    @ApiOperation(value = "接口的功能介绍", notes = "提示接口使用者注意事项", httpMethod = "POST")
+    @ApiImplicitParam(dataType = "JSONObject", name = "jsonObject", value = "入场信息", required = true)
+    @RequestMapping(value = "/car_entry_info", method = RequestMethod.POST)
+    public boolean car_entry_info(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
 
         //解析json对象
-        CarInfo carInfo = jsonObject.toJavaObject(CarInfo.class);
+        CarEntryInfo carEntryInfo = jsonObject.toJavaObject(CarEntryInfo.class);
         //提取车辆进出实时变化信息
 
         //创建车辆进出停车场topic
@@ -63,6 +73,73 @@ public class ParkController {
         //将CarInfo对象存入mysql数据库
 //        jdbcTemplate.update("xxx");
 
+        System.out.println(dataSource instanceof HikariDataSource);
+
+        try {
+            Connection connection = dataSource.getConnection();
+            Statement statement = connection.createStatement();
+            String sql = "insert into car_entry_info(comType,parkCode,plateNumber,plateColor,carType,entryPic,entryTime) values ('" +
+                    carEntryInfo.getComType() + "','" +
+                    carEntryInfo.getParkCode() + "','" +
+                    carEntryInfo.getPlateNumber() + "','" +
+                    carEntryInfo.getPlateColor() + "','" +
+                    carEntryInfo.getCarType() + "','" +
+                    carEntryInfo.getEntryPic() + "','" +
+                    carEntryInfo.getEntryTime() + "')";
+            System.out.println(sql);
+            int resultSet = statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(carEntryInfo.toString());
+
+        return false;
+    }
+
+    /**
+     * 上传车辆出场信息
+     *
+     * @param jsonObject
+     * @return
+     */
+    @ApiOperation(value = "接口的功能介绍", notes = "提示接口使用者注意事项", httpMethod = "POST")
+    @ApiImplicitParam(dataType = "JSONObject", name = "jsonObject", value = "出场信息", required = true)
+    @RequestMapping(value = "/car_exit_info", method = RequestMethod.POST)
+    public boolean car_exit_info(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
+
+        //解析json对象
+        CarExitInfo carExitInfo = jsonObject.toJavaObject(CarExitInfo.class);
+        //提取车辆进出实时变化信息
+
+        //创建车辆进出停车场topic
+//        adminClient.createTopic(new Topic(car_topic, 1));
+        //向topic发送消息
+//        producer.sendEventAsync(new Event(car_topic, "test", "data".getBytes()));
+
+//        producer.flush();
+//        producer.close();
+
+        //将CarInfo对象存入mysql数据库
+//        jdbcTemplate.update("xxx");
+
+        try {
+            Connection connection = dataSource.getConnection();
+            Statement statement = connection.createStatement();
+            String sql = "insert into car_exit_info(comType,parkCode,plateNumber,plateColor,carType,exitPic,exitTime) values ('" +
+                    carExitInfo.getComType() + "','" +
+                    carExitInfo.getParkCode() + "','" +
+                    carExitInfo.getPlateNumber() + "','" +
+                    carExitInfo.getPlateColor() + "','" +
+                    carExitInfo.getCarType() + "','" +
+                    carExitInfo.getExitPic() + "','" +
+                    carExitInfo.getExitTime() + "')";
+            System.out.println(sql);
+            int resultSet = statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         System.out.println(jsonObject.toString());
 
         return false;
@@ -74,11 +151,11 @@ public class ParkController {
      * @param jsonObject
      * @return
      */
-    @RequestMapping(value = "/park_slot", method = RequestMethod.POST)
-    public boolean park_slot(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
+    @RequestMapping(value = "/parking_lot_info", method = RequestMethod.POST)
+    public boolean parking_lot_info(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
 
         //解析json对象
-        ParkSlotStatus parkSlotStatus = jsonObject.toJavaObject(ParkSlotStatus.class);
+        ParkingLotInfo parkingLotInfo = jsonObject.toJavaObject(ParkingLotInfo.class);
         //提取车位实时变化信息
 
         //创建停车场车位topic
@@ -92,8 +169,82 @@ public class ParkController {
         //将ParkSlotStatus对象存入mysql数据库
 //        jdbcTemplate.update("xxx");
 
+        try {
+            Connection connection = dataSource.getConnection();
+            Statement statement = connection.createStatement();
+            String sql = "insert into parking_lot_info(comType,areaName,areaId,parkName,parkCode,lng,lat,dateTime,slotCount,status) values ('" +
+                    parkingLotInfo.getComType() + "','" +
+                    parkingLotInfo.getAreaName() + "','" +
+                    parkingLotInfo.getAreaId() + "','" +
+                    parkingLotInfo.getParkName() + "','" +
+                    parkingLotInfo.getParkCode() + "','" +
+                    parkingLotInfo.getLng() + "','" +
+                    parkingLotInfo.getLat() + "','" +
+                    parkingLotInfo.getDateTime() + "','" +
+                    parkingLotInfo.getSlotCount() + "','" +
+                    parkingLotInfo.getStatus() + "')";
+            System.out.println(sql);
+            int resultSet = statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         System.out.println(jsonObject.toString());
+
         return false;
 
+    }
+
+    /**
+     * 上传车位信息
+     *
+     * @param jsonObject
+     * @return
+     */
+    @ApiOperation(value = "接口的功能介绍", notes = "提示接口使用者注意事项", httpMethod = "POST")
+    @ApiImplicitParam(dataType = "JSONObject", name = "jsonObject", value = "车位信息", required = true)
+    @RequestMapping(value = "/slot_info", method = RequestMethod.POST)
+    public boolean slot_info(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
+
+        //解析json对象
+        SlotInfo slotInfo = jsonObject.toJavaObject(SlotInfo.class);
+        //提取车辆进出实时变化信息
+
+        //创建车辆进出停车场topic
+//        adminClient.createTopic(new Topic(car_topic, 1));
+        //向topic发送消息
+//        producer.sendEventAsync(new Event(car_topic, "test", "data".getBytes()));
+
+//        producer.flush();
+//        producer.close();
+
+        //将CarInfo对象存入mysql数据库
+//        jdbcTemplate.update("xxx");
+
+        System.out.println(dataSource instanceof HikariDataSource);
+        System.out.println(slotInfo.getLat());
+
+        try {
+            Connection connection = dataSource.getConnection();
+            Statement statement = connection.createStatement();
+            String sql = "insert into slot_info(comType,areaName,parkName,parkCode,lng,lat,dateTime,slotCount,occupiedSlotCount) values ('" +
+                    slotInfo.getComType() + "','" +
+                    slotInfo.getAreaName() + "','" +
+                    slotInfo.getParkName() + "','" +
+                    slotInfo.getParkCode() + "','" +
+                    slotInfo.getLng() + "','" +
+                    slotInfo.getLat() + "','" +
+                    slotInfo.getDateTime() + "','" +
+                    slotInfo.getSlotCount() + "','" +
+                    slotInfo.getOccupiedSlotCount() + "')";
+            System.out.println(sql);
+            int resultSet = statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(slotInfo.toString());
+
+        return false;
     }
 }

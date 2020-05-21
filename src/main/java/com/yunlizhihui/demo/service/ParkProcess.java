@@ -1,13 +1,13 @@
 package com.yunlizhihui.demo.service;
 
 import com.yunli.toolkit.common.process.CollectionProcess;
-import com.yunlizhihui.demo.domain.CarInfo;
+import com.yunlizhihui.demo.domain.CarExitInfo;
 
 import java.util.List;
 
-public class ParkProcess implements CollectionProcess<CarInfo> {
+public class ParkProcess implements CollectionProcess {
     @Override
-    public List<CarInfo> collectDataResourceData() {
+    public List<CarExitInfo> collectDataResourceData() {
         //在这里解析数据
 
 
