@@ -24,6 +24,8 @@ public class ParkingLotInfo {
     private String slotCount;
     //停车场状态
     private String status;
+    //收费标准
+    private String chargeRule;
 
     public String getComType() {
         return comType;
@@ -105,6 +107,14 @@ public class ParkingLotInfo {
         this.status = status;
     }
 
+    public String getChargeRule() {
+        return chargeRule;
+    }
+
+    public void setChargeRule(String chargeRule) {
+        this.chargeRule = chargeRule;
+    }
+
     @Override
     public String toString() {
         return "ParkingLotInfo{" +
@@ -118,6 +128,7 @@ public class ParkingLotInfo {
                 ", dateTime='" + dateTime + '\'' +
                 ", slotCount='" + slotCount + '\'' +
                 ", status='" + status + '\'' +
+                ", chargeRule='" + chargeRule + '\'' +
                 '}';
     }
 }

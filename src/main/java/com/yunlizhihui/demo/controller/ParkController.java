@@ -2,24 +2,21 @@ package com.yunlizhihui.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.yunlizhihui.demo.domain.CarEntryInfo;
 import com.yunlizhihui.demo.domain.CarExitInfo;
 import com.yunlizhihui.demo.domain.ParkingLotInfo;
 import com.yunlizhihui.demo.domain.SlotInfo;
 import com.yunlizhihui.demo.service.CarEntryInfoService;
+import com.yunlizhihui.demo.service.CarExitInfoService;
+import com.yunlizhihui.demo.service.ParkingLotInfoService;
+import com.yunlizhihui.demo.service.SlotInfoService;
 import com.yunlizhihui.demo.utils.ParkResponse;
-import com.zaxxer.hikari.HikariDataSource;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 @RestController
 public class ParkController {
@@ -42,13 +39,14 @@ public class ParkController {
 //        }
 //    };
 
-//    private JdbcTemplate jdbcTemplate = new JdbcTemplate(JDBCUtils.getDataSource());
-
-    @Autowired
-    private DataSource dataSource;
-
     @Autowired
     private CarEntryInfoService carEntryInfoService;
+    @Autowired
+    private CarExitInfoService carExitInfoService;
+    @Autowired
+    private ParkingLotInfoService parkingLotInfoService;
+    @Autowired
+    private SlotInfoService slotInfoService;
 
     private static Gson gson = new Gson();
 
@@ -77,29 +75,9 @@ public class ParkController {
 //        producer.flush();
 //        producer.close();
 
-        /*try {
-            Connection connection = dataSource.getConnection();
-            Statement statement = connection.createStatement();
-            String sql = "insert into car_entry_info(comType,parkCode,plateNumber,plateColor,carType,entryPic,entryTime) values ('" +
-                    carEntryInfo.getComType() + "','" +
-                    carEntryInfo.getParkCode() + "','" +
-                    carEntryInfo.getPlateNumber() + "','" +
-                    carEntryInfo.getPlateColor() + "','" +
-                    carEntryInfo.getCarType() + "','" +
-                    carEntryInfo.getEntryPic() + "','" +
-                    carEntryInfo.getEntryTime() + "')";
-            System.out.println(sql);
-            int resultSet = statement.executeUpdate(sql);
-            if (resultSet > 0) {
-                return 100;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
         ParkResponse response = carEntryInfoService.insertCarEntryInfo(carEntryInfo);
 
         String json = gson.toJson(response);
-        System.out.println(carEntryInfo);
 
         return json;
     }
@@ -113,7 +91,8 @@ public class ParkController {
     @ApiOperation(value = "接口的功能介绍", notes = "提示接口使用者注意事项", httpMethod = "POST")
     @ApiImplicitParam(dataType = "JSONObject", name = "jsonObject", value = "出场信息", required = true)
     @RequestMapping(value = "/car_exit_info", method = RequestMethod.POST)
-    public boolean car_exit_info(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
+    @ResponseBody
+    public String car_exit_info(@RequestBody JSONObject jsonObject) {
 
         //解析json对象
         CarExitInfo carExitInfo = jsonObject.toJavaObject(CarExitInfo.class);
@@ -130,26 +109,11 @@ public class ParkController {
         //将CarInfo对象存入mysql数据库
 //        jdbcTemplate.update("xxx");
 
-        try {
-            Connection connection = dataSource.getConnection();
-            Statement statement = connection.createStatement();
-            String sql = "insert into car_exit_info(comType,parkCode,plateNumber,plateColor,carType,exitPic,exitTime) values ('" +
-                    carExitInfo.getComType() + "','" +
-                    carExitInfo.getParkCode() + "','" +
-                    carExitInfo.getPlateNumber() + "','" +
-                    carExitInfo.getPlateColor() + "','" +
-                    carExitInfo.getCarType() + "','" +
-                    carExitInfo.getExitPic() + "','" +
-                    carExitInfo.getExitTime() + "')";
-            System.out.println(sql);
-            int resultSet = statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        ParkResponse response = carExitInfoService.insertCarExitInfo(carExitInfo);
 
-        System.out.println(jsonObject.toString());
+        String json = gson.toJson(response);
 
-        return false;
+        return json;
     }
 
     /**
@@ -159,7 +123,8 @@ public class ParkController {
      * @return
      */
     @RequestMapping(value = "/parking_lot_info", method = RequestMethod.POST)
-    public boolean parking_lot_info(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
+    @ResponseBody
+    public String parking_lot_info(@RequestBody JSONObject jsonObject) {
 
         //解析json对象
         ParkingLotInfo parkingLotInfo = jsonObject.toJavaObject(ParkingLotInfo.class);
@@ -176,29 +141,11 @@ public class ParkController {
         //将ParkSlotStatus对象存入mysql数据库
 //        jdbcTemplate.update("xxx");
 
-        try {
-            Connection connection = dataSource.getConnection();
-            Statement statement = connection.createStatement();
-            String sql = "insert into parking_lot_info(comType,areaName,areaId,parkName,parkCode,lng,lat,dateTime,slotCount,status) values ('" +
-                    parkingLotInfo.getComType() + "','" +
-                    parkingLotInfo.getAreaName() + "','" +
-                    parkingLotInfo.getAreaId() + "','" +
-                    parkingLotInfo.getParkName() + "','" +
-                    parkingLotInfo.getParkCode() + "','" +
-                    parkingLotInfo.getLng() + "','" +
-                    parkingLotInfo.getLat() + "','" +
-                    parkingLotInfo.getDateTime() + "','" +
-                    parkingLotInfo.getSlotCount() + "','" +
-                    parkingLotInfo.getStatus() + "')";
-            System.out.println(sql);
-            int resultSet = statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        ParkResponse response = parkingLotInfoService.insertParkingLotInfo(parkingLotInfo);
 
-        System.out.println(jsonObject.toString());
+        String json = gson.toJson(response);
 
-        return false;
+        return json;
 
     }
 
@@ -211,7 +158,8 @@ public class ParkController {
     @ApiOperation(value = "接口的功能介绍", notes = "提示接口使用者注意事项", httpMethod = "POST")
     @ApiImplicitParam(dataType = "JSONObject", name = "jsonObject", value = "车位信息", required = true)
     @RequestMapping(value = "/slot_info", method = RequestMethod.POST)
-    public boolean slot_info(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
+    @ResponseBody
+    public String slot_info(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
 
         //解析json对象
         SlotInfo slotInfo = jsonObject.toJavaObject(SlotInfo.class);
@@ -228,30 +176,10 @@ public class ParkController {
         //将CarInfo对象存入mysql数据库
 //        jdbcTemplate.update("xxx");
 
-        System.out.println(dataSource instanceof HikariDataSource);
-        System.out.println(slotInfo.getLat());
+        ParkResponse response = slotInfoService.insertSlotInfo(slotInfo);
 
-        try {
-            Connection connection = dataSource.getConnection();
-            Statement statement = connection.createStatement();
-            String sql = "insert into slot_info(comType,areaName,parkName,parkCode,lng,lat,dateTime,slotCount,occupiedSlotCount) values ('" +
-                    slotInfo.getComType() + "','" +
-                    slotInfo.getAreaName() + "','" +
-                    slotInfo.getParkName() + "','" +
-                    slotInfo.getParkCode() + "','" +
-                    slotInfo.getLng() + "','" +
-                    slotInfo.getLat() + "','" +
-                    slotInfo.getDateTime() + "','" +
-                    slotInfo.getSlotCount() + "','" +
-                    slotInfo.getOccupiedSlotCount() + "')";
-            System.out.println(sql);
-            int resultSet = statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String json = gson.toJson(response);
 
-        System.out.println(slotInfo.toString());
-
-        return false;
+        return json;
     }
 }

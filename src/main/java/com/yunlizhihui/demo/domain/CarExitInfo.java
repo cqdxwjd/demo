@@ -19,6 +19,10 @@ public class CarExitInfo {
     private String exitPic;
     //车辆驶出时间
     private String exitTime;
+    //停车时长
+    private String duration;
+    //停车费用
+    private String paidMoney;
 
     public String getComType() {
         return comType;
@@ -76,6 +80,22 @@ public class CarExitInfo {
         this.exitTime = exitTime;
     }
 
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public String getPaidMoney() {
+        return paidMoney;
+    }
+
+    public void setPaidMoney(String paidMoney) {
+        this.paidMoney = paidMoney;
+    }
+
     @Override
     public String toString() {
         return "CarExitInfo{" +
@@ -86,6 +106,8 @@ public class CarExitInfo {
                 ", carType='" + carType + '\'' +
                 ", exitPic='" + exitPic + '\'' +
                 ", exitTime='" + exitTime + '\'' +
+                ", duration='" + duration + '\'' +
+                ", paidMoney='" + paidMoney + '\'' +
                 '}';
     }
 }
