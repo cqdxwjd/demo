@@ -1,18 +1,19 @@
 package com.yunlizhihui.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.yunlizhihui.demo.domain.CarEntryInfo;
 import com.yunlizhihui.demo.domain.CarExitInfo;
 import com.yunlizhihui.demo.domain.ParkingLotInfo;
 import com.yunlizhihui.demo.domain.SlotInfo;
+import com.yunlizhihui.demo.service.CarEntryInfoService;
+import com.yunlizhihui.demo.utils.ParkResponse;
 import com.zaxxer.hikari.HikariDataSource;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -46,6 +47,11 @@ public class ParkController {
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    private CarEntryInfoService carEntryInfoService;
+
+    private static Gson gson = new Gson();
+
 
     /**
      * 上传车辆入场信息
@@ -56,7 +62,8 @@ public class ParkController {
     @ApiOperation(value = "接口的功能介绍", notes = "提示接口使用者注意事项", httpMethod = "POST")
     @ApiImplicitParam(dataType = "JSONObject", name = "jsonObject", value = "入场信息", required = true)
     @RequestMapping(value = "/car_entry_info", method = RequestMethod.POST)
-    public boolean car_entry_info(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
+    @ResponseBody
+    public String car_entry_info(@RequestBody JSONObject jsonObject) {
 
         //解析json对象
         CarEntryInfo carEntryInfo = jsonObject.toJavaObject(CarEntryInfo.class);
@@ -70,12 +77,7 @@ public class ParkController {
 //        producer.flush();
 //        producer.close();
 
-        //将CarInfo对象存入mysql数据库
-//        jdbcTemplate.update("xxx");
-
-        System.out.println(dataSource instanceof HikariDataSource);
-
-        try {
+        /*try {
             Connection connection = dataSource.getConnection();
             Statement statement = connection.createStatement();
             String sql = "insert into car_entry_info(comType,parkCode,plateNumber,plateColor,carType,entryPic,entryTime) values ('" +
@@ -88,13 +90,18 @@ public class ParkController {
                     carEntryInfo.getEntryTime() + "')";
             System.out.println(sql);
             int resultSet = statement.executeUpdate(sql);
+            if (resultSet > 0) {
+                return 100;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
+        ParkResponse response = carEntryInfoService.insertCarEntryInfo(carEntryInfo);
 
-        System.out.println(carEntryInfo.toString());
+        String json = gson.toJson(response);
+        System.out.println(carEntryInfo);
 
-        return false;
+        return json;
     }
 
     /**
