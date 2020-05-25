@@ -1,0 +1,17 @@
+{
+	"namespace":"com.yunlizhihui.demo.domain.EntryExitRecord",
+	"type":"record",
+	"name":"car_entry_exit",
+	"fields":[
+		{"name":"dataType","type":"string"},
+		{"name":"comType","type":"string"},
+		{"name":"parkCode","type":"string"},
+		{"name":"plateNumber","type":"string"},
+		{"name":"plateColor","type":"string"},
+		{"name":"carType","type":"string"},
+		{"name":"entryOrExitPic","type":"string"},
+		{"name":"entryOrExitTime","type":"string"},
+		{"name":"duration","type":"string"},
+		{"name":"paidMoney","type":"string"}
+	]
+}
