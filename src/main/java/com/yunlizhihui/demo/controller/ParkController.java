@@ -18,7 +18,6 @@ import com.yunlizhihui.demo.utils.DataBusUtils;
 import com.yunlizhihui.demo.utils.ParkResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.avro.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,20 +28,26 @@ import java.util.List;
 public class ParkController {
 
     //总线主机名
-    private String host = "10.60.7.14";
+    private static String host = "10.60.7.14";
     //总线admin端口
-    private int adminPort = 21235;
+    private static int adminPort = 21235;
     //总线admin端口
-    private int consumerPort = 21234;
+    private static int consumerPort = 21234;
     //总线admin端口
-    private int producerPort = 21236;
+    private static int producerPort = 21236;
     //车位topic名称
-    private final String slot_topic = "slot_change";
-    //车辆进出停车场topic名称
-    private final String car_topic = "car_in_out";
+    private final String slot_topic_name = "slot_change";
+    //车辆驶入停车场topic名称
+    private final String car_entry_topic_name = "car_entry_info";
+    //车辆驶出停车场topic名称
+    private final String car_exit_topic_name = "car_exit_info";
 
-    //车辆进出停车场topic 对象
-    private static Topic car_in_out = null;
+    //车辆驶入停车场topic 对象
+    private static Topic car_entry_topic = null;
+    //车辆驶出停车场topic 对象
+    private static Topic car_exit_topic = null;
+    //车位变化topic对象
+    private static Topic slot_topic = null;
 
     @Autowired
     private CarEntryInfoService carEntryInfoService;
@@ -55,6 +60,24 @@ public class ParkController {
 
     private static Gson gson = new Gson();
 
+    private static Producer producer1 = new Producer(host, producerPort) {
+        @Override
+        protected void onError(Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    };
+    private static Producer producer2 = new Producer(host, producerPort) {
+        @Override
+        protected void onError(Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    };
+    private static Producer producer3 = new Producer(host, producerPort) {
+        @Override
+        protected void onError(Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    };
 
 
     /**
@@ -71,53 +94,43 @@ public class ParkController {
 
         //解析json对象
         CarEntryInfo carEntryInfo = jsonObject.toJavaObject(CarEntryInfo.class);
-        //提取车辆进出实时变化信息
 
         //获取总线管理器
         AdminClient adminClient = DataBusUtils.getAdminClient(host, adminPort);
 
 
         //判断topic是否存在，没有则自动创建
-        if (null == car_in_out) {
+        if (null == car_entry_topic) {
             List<Topic> topics = adminClient.listTopics();
-            car_in_out = new Topic(car_topic, 1);
+            car_entry_topic = new Topic(car_entry_topic_name, 1);
             boolean contains = false;
             for (Topic topic : topics) {
-                if (topic.getName().equals(car_topic)) {
+                if (topic.getName().equals(car_entry_topic_name)) {
                     contains = true;
                 }
             }
             if (!contains) {
-                //创建车辆进出停车场topic
-                adminClient.createTopic(car_in_out);
+                //创建车辆驶入停车场topic
+                adminClient.createTopic(car_entry_topic);
             }
         } else {
             List<Topic> topics = adminClient.listTopics();
             boolean contains = false;
             for (Topic topic : topics) {
-                if (topic.getName().equals(car_in_out.getName())) {
+                if (topic.getName().equals(car_entry_topic.getName())) {
                     contains = true;
                 }
             }
             if (!contains) {
-                //创建车辆进出停车场topic
-                adminClient.createTopic(car_in_out);
+                //创建车辆驶入停车场topic
+                adminClient.createTopic(car_entry_topic);
             }
         }
 
-        new Schema.Parser()
-
-        Producer producer = new Producer(host, producerPort) {
-            @Override
-            protected void onError(Throwable throwable) {
-                throwable.printStackTrace();
-            }
-        };
         //向topic发送消息
-        producer.sendEventAsync(new Event(car_topic, "test", "test1".getBytes()));
+        producer1.sendEventAsync(new Event(car_entry_topic_name, "1", carEntryInfo.toString().getBytes()));
 
-        producer.flush();
-        producer.close();
+        producer1.flush();
 
         //数据还须要插入中间库
         ParkResponse response = carEntryInfoService.insertCarEntryInfo(carEntryInfo);
@@ -137,22 +150,46 @@ public class ParkController {
     @ApiImplicitParam(dataType = "JSONObject", name = "jsonObject", value = "出场信息", required = true)
     @RequestMapping(value = "/car_exit_info", method = RequestMethod.POST)
     @ResponseBody
-    public String car_exit_info(@RequestBody JSONObject jsonObject) {
+    public String car_exit_info(@RequestBody JSONObject jsonObject) throws InterruptedException, IOException {
 
         //解析json对象
         CarExitInfo carExitInfo = jsonObject.toJavaObject(CarExitInfo.class);
-        //提取车辆进出实时变化信息
+        //获取总线管理器
+        AdminClient adminClient = DataBusUtils.getAdminClient(host, adminPort);
 
-        //创建车辆进出停车场topic
-//        adminClient.createTopic(new Topic(car_topic, 1));
+
+        //判断topic是否存在，没有则自动创建
+        if (null == car_exit_topic) {
+            List<Topic> topics = adminClient.listTopics();
+            car_exit_topic = new Topic(car_exit_topic_name, 1);
+            boolean contains = false;
+            for (Topic topic : topics) {
+                if (topic.getName().equals(car_exit_topic_name)) {
+                    contains = true;
+                }
+            }
+            if (!contains) {
+                //创建车辆驶出停车场topic
+                adminClient.createTopic(car_exit_topic);
+            }
+        } else {
+            List<Topic> topics = adminClient.listTopics();
+            boolean contains = false;
+            for (Topic topic : topics) {
+                if (topic.getName().equals(car_exit_topic.getName())) {
+                    contains = true;
+                }
+            }
+            if (!contains) {
+                //创建车辆驶出停车场topic
+                adminClient.createTopic(car_exit_topic);
+            }
+        }
+
         //向topic发送消息
-//        producer.sendEventAsync(new Event(car_topic, "test", "data".getBytes()));
+        producer2.sendEventAsync(new Event(car_exit_topic_name, "1", carExitInfo.toString().getBytes()));
 
-//        producer.flush();
-//        producer.close();
-
-        //将CarInfo对象存入mysql数据库
-//        jdbcTemplate.update("xxx");
+        producer2.flush();
 
         ParkResponse response = carExitInfoService.insertCarExitInfo(carExitInfo);
 
@@ -196,18 +233,42 @@ public class ParkController {
 
         //解析json对象
         SlotInfo slotInfo = jsonObject.toJavaObject(SlotInfo.class);
-        //提取车辆进出实时变化信息
+        //获取总线管理器
+        AdminClient adminClient = DataBusUtils.getAdminClient(host, adminPort);
 
-        //创建车辆进出停车场topic
-//        adminClient.createTopic(new Topic(car_topic, 1));
+
+        //判断topic是否存在，没有则自动创建
+        if (null == slot_topic) {
+            List<Topic> topics = adminClient.listTopics();
+            slot_topic = new Topic(slot_topic_name, 1);
+            boolean contains = false;
+            for (Topic topic : topics) {
+                if (topic.getName().equals(slot_topic_name)) {
+                    contains = true;
+                }
+            }
+            if (!contains) {
+                //创建车位变化topic
+                adminClient.createTopic(slot_topic);
+            }
+        } else {
+            List<Topic> topics = adminClient.listTopics();
+            boolean contains = false;
+            for (Topic topic : topics) {
+                if (topic.getName().equals(slot_topic.getName())) {
+                    contains = true;
+                }
+            }
+            if (!contains) {
+                //创建车位变化topic
+                adminClient.createTopic(slot_topic);
+            }
+        }
+
         //向topic发送消息
-//        producer.sendEventAsync(new Event(car_topic, "test", "data".getBytes()));
+        producer3.sendEventAsync(new Event(slot_topic_name, "1", slotInfo.toString().getBytes()));
 
-//        producer.flush();
-//        producer.close();
-
-        //将CarInfo对象存入mysql数据库
-//        jdbcTemplate.update("xxx");
+        producer3.flush();
 
         ParkResponse response = slotInfoService.insertSlotInfo(slotInfo);
 

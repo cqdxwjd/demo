@@ -4,7 +4,7 @@ package com.yunlizhihui.demo.domain;
 public class CarEntryInfo {
     private String comType;//厂商编码
 
-    private String parkCode;//停车场编码
+    private int parkCode;//停车场编码
 
     private String plateNumber;//车牌号码
 
@@ -24,11 +24,11 @@ public class CarEntryInfo {
         this.comType = comType;
     }
 
-    public String getParkCode() {
+    public int getParkCode() {
         return parkCode;
     }
 
-    public void setParkCode(String parkCode) {
+    public void setParkCode(int parkCode) {
         this.parkCode = parkCode;
     }
 

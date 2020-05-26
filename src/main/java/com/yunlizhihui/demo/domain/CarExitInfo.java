@@ -8,7 +8,7 @@ public class CarExitInfo {
     //厂商编码
     private String comType;
     //停车场编码
-    private String parkCode;
+    private int parkCode;
     //车牌号码
     private String plateNumber;
     //车牌颜色
@@ -20,9 +20,9 @@ public class CarExitInfo {
     //车辆驶出时间
     private String exitTime;
     //停车时长
-    private String duration;
+    private int duration;
     //停车费用
-    private String paidMoney;
+    private double paidMoney;
 
     public String getComType() {
         return comType;
@@ -32,11 +32,11 @@ public class CarExitInfo {
         this.comType = comType;
     }
 
-    public String getParkCode() {
+    public int getParkCode() {
         return parkCode;
     }
 
-    public void setParkCode(String parkCode) {
+    public void setParkCode(int parkCode) {
         this.parkCode = parkCode;
     }
 
@@ -80,19 +80,19 @@ public class CarExitInfo {
         this.exitTime = exitTime;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
-    public String getPaidMoney() {
+    public double getPaidMoney() {
         return paidMoney;
     }
 
-    public void setPaidMoney(String paidMoney) {
+    public void setPaidMoney(double paidMoney) {
         this.paidMoney = paidMoney;
     }
 

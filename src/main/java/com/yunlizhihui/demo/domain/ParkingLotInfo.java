@@ -9,23 +9,23 @@ public class ParkingLotInfo {
     //片区
     private String areaName;
     //片区ID
-    private String areaId;
+    private int areaId;
     //停车场名称
     private String parkName;
     //停车场编码
-    private String parkCode;
+    private int parkCode;
     //停车场经度
-    private String lng;
+    private double lng;
     //停车场纬度
-    private String lat;
+    private double lat;
     //时间，格式：YYYY-MM-DD HH:mm:ss
     private String dateTime;
     //车位总数
-    private String slotCount;
+    private int slotCount;
     //停车场状态
-    private String status;
+    private boolean status;
     //收费标准
-    private String chargeRule;
+    private int chargeRule;
 
     public String getComType() {
         return comType;
@@ -43,11 +43,11 @@ public class ParkingLotInfo {
         this.areaName = areaName;
     }
 
-    public String getAreaId() {
+    public int getAreaId() {
         return areaId;
     }
 
-    public void setAreaId(String areaId) {
+    public void setAreaId(int areaId) {
         this.areaId = areaId;
     }
 
@@ -59,27 +59,27 @@ public class ParkingLotInfo {
         this.parkName = parkName;
     }
 
-    public String getParkCode() {
+    public int getParkCode() {
         return parkCode;
     }
 
-    public void setParkCode(String parkCode) {
+    public void setParkCode(int parkCode) {
         this.parkCode = parkCode;
     }
 
-    public String getLng() {
+    public double getLng() {
         return lng;
     }
 
-    public void setLng(String lng) {
+    public void setLng(double lng) {
         this.lng = lng;
     }
 
-    public String getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(String lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
@@ -91,27 +91,27 @@ public class ParkingLotInfo {
         this.dateTime = dateTime;
     }
 
-    public String getSlotCount() {
+    public int getSlotCount() {
         return slotCount;
     }
 
-    public void setSlotCount(String slotCount) {
+    public void setSlotCount(int slotCount) {
         this.slotCount = slotCount;
     }
 
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
-    public String getChargeRule() {
+    public int getChargeRule() {
         return chargeRule;
     }
 
-    public void setChargeRule(String chargeRule) {
+    public void setChargeRule(int chargeRule) {
         this.chargeRule = chargeRule;
     }
 
