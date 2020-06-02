@@ -16,6 +16,8 @@ public class CarEntryInfo {
 
     private String entryTime;//车辆驶入时间
 
+    private String createTime;//记录创建时间
+
     public String getComType() {
         return comType;
     }
@@ -72,16 +74,25 @@ public class CarEntryInfo {
         this.entryTime = entryTime;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     @Override
     public String toString() {
         return "CarEntryInfo{" +
                 "comType='" + comType + '\'' +
-                ", parkCode='" + parkCode + '\'' +
+                ", parkCode=" + parkCode +
                 ", plateNumber='" + plateNumber + '\'' +
                 ", plateColor='" + plateColor + '\'' +
                 ", carType='" + carType + '\'' +
                 ", entryPic='" + entryPic + '\'' +
                 ", entryTime='" + entryTime + '\'' +
+                ", createTime='" + createTime + '\'' +
                 '}';
     }
 }

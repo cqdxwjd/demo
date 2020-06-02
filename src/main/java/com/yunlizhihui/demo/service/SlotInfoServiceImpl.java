@@ -3,6 +3,7 @@ package com.yunlizhihui.demo.service;
 import com.yunlizhihui.demo.domain.SlotInfo;
 import com.yunlizhihui.demo.mapper.SlotInfoMapper;
 import com.yunlizhihui.demo.utils.ParkResponse;
+import com.yunlizhihui.demo.utils.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ public class SlotInfoServiceImpl implements SlotInfoService {
             return new ParkResponse(205, "数据为空");
         }
         try {
+            slotInfo.setCreateTime(TimeUtils.getDateTime());
             slotInfoMapper.insert(slotInfo);
         } catch (Exception e) {
             return new ParkResponse(200, e.getMessage());

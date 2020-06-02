@@ -6,6 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface CarExitInfoMapper {
-    @Insert("insert into car_exit_info(comType,parkCode,plateNumber,plateColor,paidMoney,duration,carType,exitPic,exitTime) values(#{comType},#{parkCode},#{plateNumber},#{plateColor},#{paidMoney},#{duration},#{carType},#{exitPic},#{exitTime})")
+    @Insert("insert into car_exit_info(comType,parkCode,plateNumber,plateColor,paidMoney,duration,carType,exitPic,exitTime,createTime) values(#{comType},#{parkCode},#{plateNumber},#{plateColor},#{paidMoney},#{duration},#{carType},#{exitPic},#{exitTime},#{createTime})")
     int insert(CarExitInfo carExitInfo);
 }

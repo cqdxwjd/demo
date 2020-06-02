@@ -27,6 +27,9 @@ public class ParkingLotInfo {
     //收费标准
     private int chargeRule;
 
+    //记录创建时间
+    private String createTime;
+
     public String getComType() {
         return comType;
     }
@@ -115,20 +118,33 @@ public class ParkingLotInfo {
         this.chargeRule = chargeRule;
     }
 
+    public boolean isStatus() {
+        return status;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     @Override
     public String toString() {
         return "ParkingLotInfo{" +
                 "comType='" + comType + '\'' +
                 ", areaName='" + areaName + '\'' +
-                ", areaId='" + areaId + '\'' +
+                ", areaId=" + areaId +
                 ", parkName='" + parkName + '\'' +
-                ", parkCode='" + parkCode + '\'' +
-                ", lng='" + lng + '\'' +
-                ", lat='" + lat + '\'' +
+                ", parkCode=" + parkCode +
+                ", lng=" + lng +
+                ", lat=" + lat +
                 ", dateTime='" + dateTime + '\'' +
-                ", slotCount='" + slotCount + '\'' +
-                ", status='" + status + '\'' +
-                ", chargeRule='" + chargeRule + '\'' +
+                ", slotCount=" + slotCount +
+                ", status=" + status +
+                ", chargeRule=" + chargeRule +
+                ", createTime='" + createTime + '\'' +
                 '}';
     }
 }

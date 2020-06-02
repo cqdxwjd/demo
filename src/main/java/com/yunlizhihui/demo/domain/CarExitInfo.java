@@ -24,6 +24,9 @@ public class CarExitInfo {
     //停车费用
     private double paidMoney;
 
+    //记录创建时间
+    private String createTime;
+
     public String getComType() {
         return comType;
     }
@@ -96,18 +99,27 @@ public class CarExitInfo {
         this.paidMoney = paidMoney;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     @Override
     public String toString() {
         return "CarExitInfo{" +
                 "comType='" + comType + '\'' +
-                ", parkCode='" + parkCode + '\'' +
+                ", parkCode=" + parkCode +
                 ", plateNumber='" + plateNumber + '\'' +
                 ", plateColor='" + plateColor + '\'' +
                 ", carType='" + carType + '\'' +
                 ", exitPic='" + exitPic + '\'' +
                 ", exitTime='" + exitTime + '\'' +
-                ", duration='" + duration + '\'' +
-                ", paidMoney='" + paidMoney + '\'' +
+                ", duration=" + duration +
+                ", paidMoney=" + paidMoney +
+                ", createTime='" + createTime + '\'' +
                 '}';
     }
 }

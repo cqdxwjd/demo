@@ -24,6 +24,9 @@ public class EntryExitRecord implements Serializable {
     //停车费用
     private String paidMoney;
 
+    //记录创建时间
+    private String createTime;
+
     public String getDataType() {
         return dataType;
     }
@@ -104,6 +107,14 @@ public class EntryExitRecord implements Serializable {
         this.paidMoney = paidMoney;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     @Override
     public String toString() {
         return "EntryExitRecord{" +
@@ -117,6 +128,7 @@ public class EntryExitRecord implements Serializable {
                 ", entryOrExitTime='" + entryOrExitTime + '\'' +
                 ", duration='" + duration + '\'' +
                 ", paidMoney='" + paidMoney + '\'' +
+                ", createTime='" + createTime + '\'' +
                 '}';
     }
 }

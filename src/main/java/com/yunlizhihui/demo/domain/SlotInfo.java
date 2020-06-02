@@ -20,6 +20,9 @@ public class SlotInfo {
     //占用车位总数
     private int occupiedSlotCount;
 
+    //记录创建时间
+    private String createTime;
+
     public String getComType() {
         return comType;
     }
@@ -92,18 +95,28 @@ public class SlotInfo {
         this.occupiedSlotCount = occupiedSlotCount;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+
     @Override
     public String toString() {
         return "SlotInfo{" +
                 "comType='" + comType + '\'' +
                 ", areaName='" + areaName + '\'' +
                 ", parkName='" + parkName + '\'' +
-                ", parkCode='" + parkCode + '\'' +
-                ", lng='" + lng + '\'' +
-                ", lat='" + lat + '\'' +
+                ", parkCode=" + parkCode +
+                ", lng=" + lng +
+                ", lat=" + lat +
                 ", dateTime='" + dateTime + '\'' +
-                ", slotCount='" + slotCount + '\'' +
-                ", occupiedSlotCount='" + occupiedSlotCount + '\'' +
+                ", slotCount=" + slotCount +
+                ", occupiedSlotCount=" + occupiedSlotCount +
+                ", createTime='" + createTime + '\'' +
                 '}';
     }
 }

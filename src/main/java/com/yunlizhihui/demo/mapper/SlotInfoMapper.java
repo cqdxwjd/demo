@@ -6,6 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface SlotInfoMapper {
-    @Insert("insert into slot_info(comType,areaName,parkName,parkCode,lng,lat,dateTime,slotCount,occupiedSlotCount) values(#{comType},#{areaName},#{parkName},#{parkCode},#{lng},#{lat},#{dateTime},#{slotCount},#{occupiedSlotCount})")
+    @Insert("insert into slot_info(comType,areaName,parkName,parkCode,lng,lat,dateTime,slotCount,occupiedSlotCount,createTime) values(#{comType},#{areaName},#{parkName},#{parkCode},#{lng},#{lat},#{dateTime},#{slotCount},#{occupiedSlotCount},#{createTime})")
     int insert(SlotInfo slotInfo);
 }
