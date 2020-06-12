@@ -21,6 +21,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class ParkController {
     //车位topic名称
     private final String slot_topic_name = "slot_change";
     //车辆驶入停车场topic名称
-    private final String car_entry_topic_name = "car_entry_info";
+    private final String car_entry_topic_name = "car_entry_info_test"; //car_entry_info
     //车辆驶出停车场topic名称
     private final String car_exit_topic_name = "car_exit_info";
 
@@ -47,7 +49,68 @@ public class ParkController {
     //车辆驶出停车场topic 对象
     private static Topic car_exit_topic = null;
     //车位变化topic对象
-    private static Topic slot_topic = null;
+    private Topic slot_topic = null;
+    private static Producer producer1 = null;
+    private static Producer producer2 = null;
+    private static Producer producer3 = null;
+
+    AdminClient adminClient = null;
+
+    @PostConstruct
+    private void init() {
+
+        //获取总线管理器
+        adminClient = DataBusUtils.getAdminClient(host, adminPort);
+
+        producer1 = new Producer(host, producerPort) {
+            @Override
+            protected void onError(Throwable throwable) {
+                System.out.println("无法创建producer1");
+                try {
+                    producer1.close();
+                    System.out.println("关闭producer1");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                throwable.printStackTrace();
+            }
+        };
+        producer2 = new Producer(host, producerPort) {
+            @Override
+            protected void onError(Throwable throwable) {
+                System.out.println("无法创建producer2");
+                try {
+                    producer2.close();
+                    System.out.println("关闭producer2");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                throwable.printStackTrace();
+            }
+        };
+        producer3 = new Producer(host, producerPort) {
+            @Override
+            protected void onError(Throwable throwable) {
+                System.out.println("无法创建producer3");
+                try {
+                    producer3.close();
+                    System.out.println("关闭producer3");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                throwable.printStackTrace();
+            }
+        };
+    }
+
+    @PreDestroy
+    private void destroy() throws IOException {
+        producer1.close();
+        producer2.close();
+        producer3.close();
+        adminClient.close();
+
+    }
 
     @Autowired
     private CarEntryInfoService carEntryInfoService;
@@ -59,25 +122,6 @@ public class ParkController {
     private SlotInfoService slotInfoService;
 
     private static Gson gson = new Gson();
-
-    private static Producer producer1 = new Producer(host, producerPort) {
-        @Override
-        protected void onError(Throwable throwable) {
-            throwable.printStackTrace();
-        }
-    };
-    private static Producer producer2 = new Producer(host, producerPort) {
-        @Override
-        protected void onError(Throwable throwable) {
-            throwable.printStackTrace();
-        }
-    };
-    private static Producer producer3 = new Producer(host, producerPort) {
-        @Override
-        protected void onError(Throwable throwable) {
-            throwable.printStackTrace();
-        }
-    };
 
 
     /**
@@ -94,10 +138,6 @@ public class ParkController {
 
         //解析json对象
         CarEntryInfo carEntryInfo = jsonObject.toJavaObject(CarEntryInfo.class);
-
-        //获取总线管理器
-        AdminClient adminClient = DataBusUtils.getAdminClient(host, adminPort);
-
 
         //判断topic是否存在，没有则自动创建
         if (null == car_entry_topic) {
@@ -154,9 +194,6 @@ public class ParkController {
 
         //解析json对象
         CarExitInfo carExitInfo = jsonObject.toJavaObject(CarExitInfo.class);
-        //获取总线管理器
-        AdminClient adminClient = DataBusUtils.getAdminClient(host, adminPort);
-
 
         //判断topic是否存在，没有则自动创建
         if (null == car_exit_topic) {
@@ -185,6 +222,7 @@ public class ParkController {
                 adminClient.createTopic(car_exit_topic);
             }
         }
+
 
         //向topic发送消息
         producer2.sendEventAsync(new Event(car_exit_topic_name, "1", carExitInfo.toString().getBytes()));
@@ -233,8 +271,6 @@ public class ParkController {
 
         //解析json对象
         SlotInfo slotInfo = jsonObject.toJavaObject(SlotInfo.class);
-        //获取总线管理器
-        AdminClient adminClient = DataBusUtils.getAdminClient(host, adminPort);
 
 
         //判断topic是否存在，没有则自动创建

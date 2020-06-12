@@ -27,6 +27,17 @@ public class ParkingLotInfo {
     //收费标准
     private int chargeRule;
 
+    //停车场类型，0：室内，1：路边
+    private int parkType;
+
+    public int getParkType() {
+        return parkType;
+    }
+
+    public void setParkType(int parkType) {
+        this.parkType = parkType;
+    }
+
     //记录创建时间
     private String createTime;
 
@@ -144,6 +155,7 @@ public class ParkingLotInfo {
                 ", slotCount=" + slotCount +
                 ", status=" + status +
                 ", chargeRule=" + chargeRule +
+                ", parkType=" + parkType +
                 ", createTime='" + createTime + '\'' +
                 '}';
     }
